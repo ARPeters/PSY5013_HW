@@ -17,12 +17,15 @@ plot(GPA, SAT)
 
 #2. Calculate the Pearson correlation coefficient between GPA and SAT and report its significance. Interpret this correlation 
 #   coefficient and state why causation cannot be concluded here.
+cov(GPA, SAT)/var(SAT)
+
+var(SAT)
+sd(SAT)
+sd(GPA)
+r<-cor(GPA, SAT)
 q<-cor.test(GPA, SAT)
 as.numeric(q$estimate)
 
-GPArel*SATrel
-
-as.numeric(q$estimate)/(sqrt(GPArel*SATrel))
 #   Correlation coefficient is 3.762257, p-value=7.94e -10, 95% Conf.int: [0.2645, 0.4779818]
 #   This suggests positive correlation between the two. 
 #   Correlation does not equal causation. 
@@ -52,3 +55,11 @@ mean(ds$SAT)
 sd(ds$SAT)
 range(ds$SAT)
 
+
+(0.3762257)*(0.5427207/88.44936)
+mean(GPA)-(as.numeric(q$estimate)*mean(SAT))
+mean(SAT)
+(2.70012)-(.3762257*504.5834)
+
+
+GPAhat<-glm(GPA~SAT)
