@@ -2,8 +2,6 @@ library(foreign)
 ds<-read.csv("gpa.csv")
 SAT<-ds$SAT
 GPA<-ds$GPA
-
-
 Prevach<-ds$Prevach
 
 dsSATGPA<-ds[,1:2]
