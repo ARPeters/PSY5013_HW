@@ -5,10 +5,10 @@ library(lme4)
 library(car)
 library(qqnorm)
 library(het.test)
-install.packages("nortest")
 library(nortest)
-install.packages("bstats")
 library(het.test)
+
+install.packages("QuantPsyc")
 ds<-read.csv("gpa.csv")
 head(ds)
 colnames(ds)
@@ -131,3 +131,60 @@ GPAonSATnew<-lm(GPA~SAT+(SAT*SAT), data=ds)
 whites.htest(model1)
 #Independence of one residual on preceding observation
 durbinWatsonTest(GPAonSAT)
+
+######################################################
+#Question 3
+######################################################
+
+colnames(ds)
+mean(ds$SAT)
+sd(ds$SAT)
+var(ds$SAT)
+
+mean(ds$GPA)
+sd(ds$GPA)
+var(ds$GPA)
+
+mean(ds$Prevach)
+sd(ds$Prevach)
+var(ds$Prevach)
+
+cor(ds$GPA, ds$SAT)
+cor(ds$GPA, ds$Prevach)
+cor(ds$SAT, ds$Prevach)
+
+.328*.503
+X<-(0.543/10.572)
+Y<-((0.328-(0.376*0.503))/(1-(0.503*0.503)))
+X*Y
+
+model2<-lm(GPA~SAT+Prevach, data=ds)
+2.7-(.001734*504.6)-(.00955*50.529)
+
+lm.beta(model2)
+library(QuantPsyc)
+
+head(ds)
+SATW<-vector()
+for(i in 1:length(ds$GPA)){
+  SATW[i]<-((ds$SAT[i]-mean(ds$SAT))/sd(ds$SAT))  
+}
+
+PVCW<-vector()
+for(i in 1:length(ds$GPA)){
+  PVCW[i]<-((ds$Prevach[i]-mean(ds$Prevach))/sd(ds$Prevach))  
+}
+
+
+GPAW<-vector()
+for(i in 1:length(ds$GPA)){
+  GPAW[i]<-((ds$GPA[i]-mean(ds$GPA))/sd(ds$GPA))  
+}
+
+#I'm an idiot.
+model3<-lm(GPA~SAT+Prevach, data=dsW)
+model4<-lm(GPAW~SATW+PVCW, data=dsW)
+
+summary(model3)
+
+summary(model4)
