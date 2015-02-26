@@ -6,6 +6,7 @@ ds<-read.table("health.dat")
 colnames(ds)<-c("case", "age", "income", "havephys", "physrec", "womrel", "lump", "suscept1", "severe1", "benefit1", "barrier1", "intent1", "comply")
 
 #Question1
+#Reformatting table into that form from Slideshow 11, slide 14
 Model1<-lm(intent1~havephys+physrec,data=ds)
 Model1
 Model2<-lm(intent1~havephys+physrec+lump+womrel, data=ds)
@@ -51,15 +52,71 @@ Q1table<-cbind(cor.with.y, hrtable1)
 Q1table
 
 #Question 2
-Modelnull<-lm(intent1~1, data=ds)
-length(ds$intent1)
-summary(Modelnull)
 summary(Model1)
-summary(Model2)
-summary(Model3)
 
-num<-(.119-.052)/4
-denom<-(1-.119)/(278)
-f1<-num/denom
-f1
+anova(Model1, Model2, Model3)
+
+#Question 3
+dsGPA<-read.table("HW3_GPA.dat")
+colnames(dsGPA)<-c("CGPA", "HGPA", "SAT", "SEX")
+
+#Question 3-1
+
+#A
+#Semipartial correlation between CGPA and SAT by partialling effect of HGPA from CGPA.
+#Regress CGPA onto HGPA; compute residuals; find correlation between SAT and residuals of CGPA
+CregH<-lm(CGPA~HGPA, data=dsGPA)
+CregHresiduals<-as.vector(CregH$residuals)
+dsGPA<-cbind(dsGPA, CregHresiduals)
+
+SATcorCresid<-cor(dsGPA$CregHresiduals, dsGPA$SAT)
+SATcorCresid
+
+#B
+#Semipartial of CGPA and SAT, controlling for HGPA, using correlation coefficients
+ScorC<-cor(dsGPA$SAT, dsGPA$CGPA)
+ScorH<-cor(dsGPA$SAT, dsGPA$HGPA)
+CcorH<-cor(dsGPA$CGPA, dsGPA$HGPA)
+
+ScorC
+ScorH
+CcorH
+
+#C
+#Semipartial of CGPA and SAT, removing effects of HGPA on CGPA, using squared multiple correlation coefficients.
+ModelSATonCH<-lm(SAT~CGPA+HGPA, data=dsGPA)
+summary(ModelSATonCH)
+
+ModelSATonH<-lm(SAT~HGPA, data=dsGPA)
+summary(ModelSATonH)
+
+#Question 3-2
+
+#A
+#Computing the correlation of the residuals of SAT regressed onto HGPA and the residuals of CGPA regressed onto HGPA.
+SregH<-lm(SAT~HGPA, data=dsGPA)
+SregHresiduals<-as.vector(SregH$residuals)
+dsGPA<-cbind(dsGPA, SregHresiduals)
+
+SresidCorCresid<-cor(dsGPA$SregHresiduals, dsGPA$CregHresiduals)
+SresdiCorCresid
+
+#B
+#Semipartial of CGPA and SAT, controlling for HGPA, using correlation coefficients
+ScorC<-cor(dsGPA$SAT, dsGPA$CGPA)
+ScorH<-cor(dsGPA$SAT, dsGPA$HGPA)
+CcorH<-cor(dsGPA$CGPA, dsGPA$HGPA)
+
+ScorC
+ScorH
+CcorH
+
+#C
+#Semipartial of CGPA and SAT, removing effects of HGPA on CGPA, using squared multiple correlation coefficients.
+ModelSATonCH<-lm(SAT~CGPA+HGPA, data=dsGPA)
+summary(ModelSATonCH)
+
+ModelSATonH<-lm(SAT~HGPA, data=dsGPA)
+summary(ModelSATonH)
+
 
