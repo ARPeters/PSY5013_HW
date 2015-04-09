@@ -1,0 +1,60 @@
+---
+title: "PSY5013_Homework5"
+output: html_document
+---
+
+### Assignment 5: Question 2
+There are 11 variables in the data set “hsb_mar.xls”. Note that although dataset contains 200 cases, six of the variables have fewer than 200 observations. We assume those data values are missing at random (MAR). 
+
+1. Figure out proportion of missingness for each of those six variables
+
+```{r, echo=FALSE, message=FALSE, error=FALSE}
+library(foreign)
+library(mi)
+ds<-read.csv("hsb_mar.csv")
+```
+
+Summary of Missingness:
+```{r, echo=FALSE}
+Missingness<-c(sum(is.na(ds$FEMALE)), sum(is.na(ds$PROG)), sum(is.na(ds$READ)), 
+                   sum(is.na(ds$WRITE)), sum(is.na(ds$MATH)), sum(is.na(ds$SCIENCE)))
+
+Variables<-c("FEMALE", "PROG", "READ", "WRITE", "MATH", "SCIENCE")
+
+MissingnessProportion<-Missingness/200
+
+dsMissingnessTable<-cbind(Variables, Missingness, MissingnessProportion)
+dsMissingnessTable
+
+```
+
+2. Now you would like to use write, read, math and female to predict socst. 
+
+a). Run the regression analysis using all complete cases
+
+Regressing SOCST onto WRITE, READ, MATH, FEMALE after applying listwise deletion to the dataset.
+This left us with a data set of 117 subjects.
+```{r, echo=FALSE}
+dsComplete<-na.omit(ds)
+ModelComplete<-glm(SOCST~WRITE+READ+MATH+FEMALE, data=dsComplete)
+summary(ModelComplete)
+```
+
+b).Run the regression analysis using multiple imputed data sets (nimpute = 5)
+
+```{r, echo=TRUE, message=FALSE, results='hide'}
+dsInfo<-mi.info(ds)
+dsMI<-mi(object=ds, info=dsInfo, n.imp=5)
+fit<-lm.mi(SOCST~WRITE+READ+MATH+FEMALE, dsMI)
+fit@mi.pooled
+```
+
+```{r, echo=FALSE}
+fit@mi.pooled
+```
+
+c). Compare the results from (a) and (b). What did you find? 
+
+The regression coefficients associated with "FEMALE", and to a lesser extent "READ", have increased noticeably, although their
+standard errors seem unchanged. It seems that the MI process has increased the correlation between the predictor variables "FEMALE" and "READ" and the dependent variable, SOCST. 
+The intercept for the imputed dataset has shrunk considerably. 
