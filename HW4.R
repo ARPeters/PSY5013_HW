@@ -4,6 +4,9 @@ ds<-read.table("Student_Survey_Data.dat")
 colnames(ds)<-c("ID", "Gender", "Age", "Party", "Marijuana")
 head(ds)
 
+
+#Just testing
+
 #ID: case id.
 #Gender: males = 1 and females = 2.  
 #Age: students' age.
